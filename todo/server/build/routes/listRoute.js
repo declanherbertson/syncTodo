@@ -1,4 +1,8 @@
 "use strict";
+var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cooked, raw) {
+    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
+    return cooked;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -40,17 +44,49 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
+var postgres_1 = require("@vercel/postgres");
 var router = express_1.default.Router();
 router.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var notesId, query, rows, error_1;
     return __generator(this, function (_a) {
-        res.send('Test');
-        return [2 /*return*/];
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                notesId = (req.query.id || 'NONE_SENTINEL');
+                query = (0, postgres_1.sql)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n      SELECT * FROM notes WHERE note_id = ", ";\n    "], ["\n      SELECT * FROM notes WHERE note_id = ", ";\n    "])), notesId);
+                return [4 /*yield*/, query];
+            case 1:
+                rows = (_a.sent()).rows;
+                res.status(200).json(rows);
+                return [3 /*break*/, 3];
+            case 2:
+                error_1 = _a.sent();
+                res.status(500).json({ error: 'error fetching notes' });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
     });
 }); });
 router.post('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        res.send('Test');
-        return [2 /*return*/];
+    var _a, note_id, notes, query, rows, error_2;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _b.trys.push([0, 2, , 3]);
+                _a = req.body, note_id = _a.note_id, notes = _a.notes;
+                query = (0, postgres_1.sql)(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n      INSERT INTO notes (note_id, strings) VALUES (", ", ", ");\n    "], ["\n      INSERT INTO notes (note_id, strings) VALUES (", ", ", ");\n    "])), note_id, notes);
+                return [4 /*yield*/, query];
+            case 1:
+                rows = (_b.sent()).rows;
+                res.status(200).json(rows);
+                return [3 /*break*/, 3];
+            case 2:
+                error_2 = _b.sent();
+                res.status(500).json({ error: 'error create notes' });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
     });
 }); });
 exports.default = router;
+var templateObject_1, templateObject_2;
