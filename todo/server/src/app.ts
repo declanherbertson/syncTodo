@@ -5,10 +5,6 @@ import routes from './routes';
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-app.use(express.static(path.join(__dirname, 'public')));
 routes(app);
 
 app.listen(PORT, () =>
