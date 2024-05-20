@@ -7,10 +7,10 @@ exports.app = void 0;
 const express_1 = __importDefault(require("express"));
 exports.app = (0, express_1.default)();
 const PORT = 3000;
-exports.app.get("/api/list", (req, res) => {
+exports.app.get("/", (req, res) => {
     res.send(req.query);
 });
-exports.app.post("/api/list", (req, res) => {
+exports.app.post("/", (req, res) => {
     res.send(req.body);
 });
 exports.app.listen(PORT, () => console.log(`Server ready on port ${PORT}.`));
