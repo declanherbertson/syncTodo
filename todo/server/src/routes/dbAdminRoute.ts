@@ -1,12 +1,12 @@
 import express from 'express';
-import { sql } from "@vercel/postgres";
+import { sql, db } from "@vercel/postgres";
 
 async function createTables() {
   const query = sql`
     CREATE TABLE IF NOT EXISTS notes (
-      id SERIAL PRIMARY KEY,
       note_id VARCHAR(255),
-      strings TEXT[] NOT NULL
+      strings TEXT[] NOT NULL,
+      primary key (note_id)
     );
   `;
   const { rows } = await query;
@@ -58,6 +58,31 @@ router.get('/notes', async (req, res) => {
   }
   catch (error) {
     res.send("Error listing notes");
+  }
+});
+
+router.get('/dropNotes', async (req, res) => {
+  try {
+    const query = sql`
+      DROP TABLE notes;
+    `;
+    const { rows } = await query;
+    res.send("Table dropped successfully");
+  }
+  catch (error) {
+    res.send("Error dropping table");
+  }
+});
+
+router.post('/sql', async (req, res) => {
+  try {
+    const client = await db.connect();
+    const { query } = req.body;
+    const { rows } = await client.sql`${query}`;
+    res.status(200).json(rows);
+  }
+  catch (error) {
+    res.status(500).json(JSON.stringify(error));
   }
 });
 

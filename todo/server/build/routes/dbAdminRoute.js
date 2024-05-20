@@ -51,7 +51,7 @@ function createTables() {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    query = (0, postgres_1.sql)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    CREATE TABLE IF NOT EXISTS notes (\n      id SERIAL PRIMARY KEY,\n      note_id VARCHAR(255),\n      strings TEXT[] NOT NULL\n    );\n  "], ["\n    CREATE TABLE IF NOT EXISTS notes (\n      id SERIAL PRIMARY KEY,\n      note_id VARCHAR(255),\n      strings TEXT[] NOT NULL\n    );\n  "])));
+                    query = (0, postgres_1.sql)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    CREATE TABLE IF NOT EXISTS notes (\n      note_id VARCHAR(255),\n      strings TEXT[] NOT NULL,\n      primary key (note_id)\n    );\n  "], ["\n    CREATE TABLE IF NOT EXISTS notes (\n      note_id VARCHAR(255),\n      strings TEXT[] NOT NULL,\n      primary key (note_id)\n    );\n  "])));
                     return [4 /*yield*/, query];
                 case 1:
                     rows = (_a.sent()).rows;
@@ -149,5 +149,48 @@ router.get('/notes', function (req, res) { return __awaiter(void 0, void 0, void
         }
     });
 }); });
+router.get('/dropNotes', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var query, rows, error_4;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                query = (0, postgres_1.sql)(templateObject_4 || (templateObject_4 = __makeTemplateObject(["\n      DROP TABLE notes;\n    "], ["\n      DROP TABLE notes;\n    "])));
+                return [4 /*yield*/, query];
+            case 1:
+                rows = (_a.sent()).rows;
+                res.send("Table dropped successfully");
+                return [3 /*break*/, 3];
+            case 2:
+                error_4 = _a.sent();
+                res.send("Error dropping table");
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
+router.post('/sql', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var client, query, rows, error_5;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 3, , 4]);
+                return [4 /*yield*/, postgres_1.db.connect()];
+            case 1:
+                client = _a.sent();
+                query = req.body.query;
+                return [4 /*yield*/, client.sql(templateObject_5 || (templateObject_5 = __makeTemplateObject(["", ""], ["", ""])), query)];
+            case 2:
+                rows = (_a.sent()).rows;
+                res.status(200).json(rows);
+                return [3 /*break*/, 4];
+            case 3:
+                error_5 = _a.sent();
+                res.status(500).json(JSON.stringify(error_5));
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); });
 exports.default = router;
-var templateObject_1, templateObject_2, templateObject_3;
+var templateObject_1, templateObject_2, templateObject_3, templateObject_4, templateObject_5;

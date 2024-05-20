@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
     const { rows } = await query;
     res.status(200).json(rows);
   } catch (error) {
-    res.status(500).json({ error: 'error fetching notes' });
+    res.status(500).json({ error: JSON.stringify(error) });
   }
 });
 
@@ -22,12 +22,15 @@ router.post('/', async (req, res) => {
     const { note_id, notes } = req.body;
     // TODO santize note_id and strings
     const query = sql`
-      INSERT INTO notes (note_id, strings) VALUES (${note_id}, ${notes});
+      INSERT INTO notes (note_id, strings) 
+      VALUES (${note_id}, ${notes}) 
+      ON CONFLICT note_id
+      DO UPDATE SET strings = ${notes};
     `;
     const { rows } = await query;
     res.status(200).json(rows);
   } catch (error) {
-    res.status(500).json({ error: 'error create notes' });
+    res.status(500).json({ error: JSON.stringify(error) });
   }
 });
 

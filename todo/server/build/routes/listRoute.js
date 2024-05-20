@@ -61,7 +61,7 @@ router.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 return [3 /*break*/, 3];
             case 2:
                 error_1 = _a.sent();
-                res.status(500).json({ error: 'error fetching notes' });
+                res.status(500).json({ error: JSON.stringify(error_1) });
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
@@ -74,7 +74,7 @@ router.post('/', function (req, res) { return __awaiter(void 0, void 0, void 0, 
             case 0:
                 _b.trys.push([0, 2, , 3]);
                 _a = req.body, note_id = _a.note_id, notes = _a.notes;
-                query = (0, postgres_1.sql)(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n      INSERT INTO notes (note_id, strings) VALUES (", ", ", ");\n    "], ["\n      INSERT INTO notes (note_id, strings) VALUES (", ", ", ");\n    "])), note_id, notes);
+                query = (0, postgres_1.sql)(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n      INSERT INTO notes (note_id, strings) \n      VALUES (", ", ", ") \n      ON CONFLICT note_id\n      DO UPDATE SET strings = ", ";\n    "], ["\n      INSERT INTO notes (note_id, strings) \n      VALUES (", ", ", ") \n      ON CONFLICT note_id\n      DO UPDATE SET strings = ", ";\n    "])), note_id, notes, notes);
                 return [4 /*yield*/, query];
             case 1:
                 rows = (_b.sent()).rows;
@@ -82,7 +82,7 @@ router.post('/', function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 return [3 /*break*/, 3];
             case 2:
                 error_2 = _b.sent();
-                res.status(500).json({ error: 'error create notes' });
+                res.status(500).json({ error: JSON.stringify(error_2) });
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
