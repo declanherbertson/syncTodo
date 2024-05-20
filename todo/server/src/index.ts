@@ -2,11 +2,11 @@ import express from "express";
 export const app = express();
 const PORT = 3000;
 
-app.get("/api/list", (req, res) => {
+app.get("/", (req, res) => {
   res.send(req.query);
 });
 
-app.post("/api/list", (req, res) => {
+app.post("/", (req, res) => {
   res.send(req.body);
 });
 
